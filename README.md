@@ -4,6 +4,7 @@
 ![Cryptography](https://img.shields.io/badge/Standard-OpenSSH%20%C2%B7%20Ed25519-438B71?style=flat-square)
 ![Windows Clients](https://img.shields.io/badge/Windows-OpenSSH%20%C2%B7%20MobaXterm%20%C2%B7%20PuTTY-2D3A4F?style=flat-square)
 ![GitHub Pages](https://img.shields.io/badge/Docs-GitHub%20Pages%20Ready-B45309?style=flat-square)
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-475569?style=flat-square)](LICENSE)
 
 A comprehensive, cross-platform reference and learning guide for **Secure Shell (SSH)** — designed to take you from your very first key pair to jump hosts, port forwarding, connection multiplexing, and Windows tooling.
 
@@ -89,3 +90,7 @@ Verify Markdown links, Mermaid diagram standards, theme invariants, and client-s
 ```bash
 npm test
 ```
+
+## License
+
+This work is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) (CC BY-SA 4.0). You are free to share and adapt the material with attribution, provided adaptations are distributed under the same license. See [LICENSE](LICENSE) for the full legal text.

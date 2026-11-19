@@ -185,3 +185,15 @@ test('GitHub Pages layout and CSS uphold modern-web-guidance dark-mode and CSS i
   assert.doesNotMatch(css, /^\s*\*\s*\{/m, 'CSS must not include a global * reset');
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
 });
+
+test('repository includes the official CC BY-SA 4.0 LICENSE referenced from README', () => {
+  const licensePath = path.join(ROOT, 'LICENSE');
+  assert.ok(fs.existsSync(licensePath), 'LICENSE file must exist at repository root');
+  const licenseText = fs.readFileSync(licensePath, 'utf8');
+  assert.match(licenseText, /^Attribution-ShareAlike 4\.0 International\b/);
+  assert.match(licenseText, /Creative Commons Corporation/);
+
+  const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+  assert.match(readme, /\[LICENSE\]\(LICENSE\)/);
+  assert.match(readme, /CC BY-SA 4\.0/);
+});
