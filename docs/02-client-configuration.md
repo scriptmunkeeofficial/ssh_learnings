@@ -1,6 +1,6 @@
 # 2. Client Configuration (macOS & Linux)
 
-[← SSH Basics](./01-ssh-basics.md) | [Index](./index.md) | [Next: Windows SSH Clients →](./03-windows-clients.md)
+**Guide 2 of 5** · [← SSH Basics](./01-ssh-basics.md) · [Home](./index.md) · [Next: Windows SSH Clients →](./03-windows-clients.md)
 
 ---
 
@@ -64,9 +64,8 @@ Host *
     ServerAliveCountMax 3
 ```
 
-### Why `IgnoreUnknown UseKeychain`?
-
-`UseKeychain` is an Apple-specific OpenSSH option. Without `IgnoreUnknown UseKeychain` above it, sharing the same `~/.ssh/config` on a Linux machine will cause SSH to fail with `Bad configuration option: usekeychain`.
+> [!NOTE]
+> **Why `IgnoreUnknown UseKeychain`?** `UseKeychain` is an Apple-specific OpenSSH option. Without `IgnoreUnknown UseKeychain` above it, sharing the same `~/.ssh/config` on a Linux machine causes SSH to fail with `Bad configuration option: usekeychain`.
 
 ---
 
@@ -103,7 +102,60 @@ Now `ssh web01` connects to `deploy@203.0.113.25` on port `2222` using your work
 
 In many environments, internal servers are not directly reachable from the internet. You must first connect through a **jump host** (also called a **bastion host**).
 
-Modern OpenSSH (7.3+) provides **`ProxyJump`**, which is cleaner and far more secure than agent forwarding because your private key never leaves your local machine.
+Modern OpenSSH (7.3+) provides **`ProxyJump`**, which is cleaner and far more secure than agent forwarding because your private key never leaves your local machine and the bastion never sees your decrypted inner session.
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "fontSize": "12px",
+    "primaryColor": "#F0F4F8",
+    "primaryTextColor": "#1E293B",
+    "primaryBorderColor": "#3B4C68",
+    "lineColor": "#475569",
+    "secondaryColor": "#F8FAFC",
+    "tertiaryColor": "#FFFFFF",
+    "clusterBkg": "#F8FAFC",
+    "clusterBorder": "#94A3B8"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "nodeSpacing": 35,
+    "rankSpacing": 55,
+    "padding": 12
+  }
+}}%%
+flowchart LR
+    classDef edge fill:#FFFFFF,stroke:#475569,stroke-width:1.5px,color:#1E293B
+    classDef identity fill:#FAF6F0,stroke:#D2BFA9,stroke-width:1.5px,color:#2D3A4F
+    classDef service fill:#F0F4F8,stroke:#3B4C68,stroke-width:1.5px,color:#1E293B
+    classDef data fill:#E1EFEA,stroke:#438B71,stroke-width:1.5px,color:#1E293B
+    classDef obs fill:#FFFBEB,stroke:#B45309,stroke-width:1.5px,color:#1E293B
+    classDef alertCrit fill:#FEF2F2,stroke:#B91C1C,stroke-width:1.5px,color:#B91C1C
+
+    subgraph LocalZone["Local Workstation"]
+        direction TB
+        LAPTOP["SSH Client<br/>ssh dev-app"]:::edge
+        KEY["Local ssh-agent<br/>Private Key Stays Here"]:::identity
+        LAPTOP --- KEY
+    end
+
+    subgraph PublicDMZ["Public DMZ"]
+        direction TB
+        BASTION["Bastion / Jump Host<br/>bastion.example.com<br/>(TCP Forward Only)"]:::service
+    end
+
+    subgraph PrivateVPC["Private Network (No Public IP)"]
+        direction TB
+        APP["dev-app<br/>10.0.10.42"]:::service
+        DB["db-private<br/>10.0.99.10"]:::data
+    end
+
+    LAPTOP -->|"Outer SSH Tunnel<br/>(Hop 1)"| BASTION
+    BASTION -->|"End-to-End Encrypted<br/>Inner SSH Session"| APP
+    APP -.->|"Multi-Hop ProxyJump<br/>bastion,dev-app"| DB
+```
 
 ### Single-Hop Jump Host
 
@@ -200,6 +252,9 @@ Host *
     ServerAliveCountMax 3
 ```
 
+> [!TIP]
+> Verify how OpenSSH resolves any host alias — without actually opening a connection — by running `ssh -G dev-app`.
+
 ---
 
-[← SSH Basics](./01-ssh-basics.md) | [Index](./index.md) | [Next: Windows SSH Clients →](./03-windows-clients.md)
+**Guide 2 of 5** · [← SSH Basics](./01-ssh-basics.md) · [Home](./index.md) · [Next: Windows SSH Clients →](./03-windows-clients.md)

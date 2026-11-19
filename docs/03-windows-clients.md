@@ -1,10 +1,55 @@
 # 3. Windows SSH Clients
 
-[← Client Configuration (macOS & Linux)](./02-client-configuration.md) | [Index](./index.md) | [Next: Advanced SSH Techniques →](./04-advanced-ssh.md)
+**Guide 3 of 5** · [← Client Configuration (macOS & Linux)](./02-client-configuration.md) · [Home](./index.md) · [Next: Advanced SSH Techniques →](./04-advanced-ssh.md)
 
 ---
 
-Windows users have three primary ways to work with SSH. Choose the one that best fits your workflow:
+Windows users have three primary ways to work with SSH. Use the decision chart and comparison table below to pick the client that best fits your workflow:
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "fontSize": "12px",
+    "primaryColor": "#F0F4F8",
+    "primaryTextColor": "#1E293B",
+    "primaryBorderColor": "#3B4C68",
+    "lineColor": "#475569",
+    "secondaryColor": "#F8FAFC",
+    "tertiaryColor": "#FFFFFF",
+    "clusterBkg": "#F8FAFC",
+    "clusterBorder": "#94A3B8"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "nodeSpacing": 35,
+    "rankSpacing": 55,
+    "padding": 12
+  }
+}}%%
+flowchart TB
+    classDef edge fill:#FFFFFF,stroke:#475569,stroke-width:1.5px,color:#1E293B
+    classDef identity fill:#FAF6F0,stroke:#D2BFA9,stroke-width:1.5px,color:#2D3A4F
+    classDef service fill:#F0F4F8,stroke:#3B4C68,stroke-width:1.5px,color:#1E293B
+    classDef data fill:#E1EFEA,stroke:#438B71,stroke-width:1.5px,color:#1E293B
+    classDef obs fill:#FFFBEB,stroke:#B45309,stroke-width:1.5px,color:#1E293B
+    classDef alertCrit fill:#FEF2F2,stroke:#B91C1C,stroke-width:1.5px,color:#B91C1C
+
+    START["Choosing a Windows<br/>SSH Client"]:::edge
+    Q1{"Need Terminal / Git /<br/>VS Code Remote-SSH?"}:::obs
+    Q2{"Want Tabbed GUI +<br/>Drag-and-Drop SFTP + X11?"}:::obs
+
+    OPENSSH["Option A: Native Windows OpenSSH<br/>Uses standard ~/.ssh/config<br/>(Recommended Default)"]:::data
+    MOBA["Option B: MobaXterm<br/>All-in-One GUI + MobAgent<br/>+ Built-in SFTP Sidebar"]:::service
+    PUTTY["Option C: PuTTY Suite<br/>Lightweight Standalone GUI<br/>+ Pageant + .ppk Keys"]:::identity
+
+    START --> Q1
+    Q1 -->|"Yes"| OPENSSH
+    Q1 -->|"Prefer GUI"| Q2
+    Q2 -->|"Yes"| MOBA
+    Q2 -->|"Need minimal / .ppk"| PUTTY
+```
 
 | Client | Best For | Config Format | Built-in SFTP / X11 |
 |--------|----------|---------------|---------------------|
@@ -55,7 +100,8 @@ Now add your private key (in a normal PowerShell window):
 ssh-add $env:USERPROFILE\.ssh\id_ed25519
 ```
 
-Windows stores the key in the agent persistently across reboots.
+> [!NOTE]
+> Windows stores the key in the `ssh-agent` service persistently across reboots — you only need to run `ssh-add` once per key.
 
 ### 4. Configure `%USERPROFILE%\.ssh\config`
 
@@ -139,6 +185,9 @@ So you only enter your passphrase once per Windows session:
 - **Automatic SFTP Sidebar:** When connected over SSH, MobaXterm automatically opens a graphical SFTP browser on the left panel for drag-and-drop file transfers.
 - **Local Terminal with OpenSSH:** Click **Start local terminal** to use standard `ssh`, `scp`, and `rsync` commands directly in a Bash-like shell.
 
+> [!TIP]
+> If you already maintain a standard `~/.ssh/config`, MobaXterm's **Local Terminal** can use it directly — giving you both GUI sessions and CLI aliases in one app.
+
 ---
 
 ## Option C: PuTTY, PuTTYgen & Pageant
@@ -213,4 +262,4 @@ If you are using an older PuTTY release without native SSH proxy support:
 
 ---
 
-[← Client Configuration (macOS & Linux)](./02-client-configuration.md) | [Index](./index.md) | [Next: Advanced SSH Techniques →](./04-advanced-ssh.md)
+**Guide 3 of 5** · [← Client Configuration (macOS & Linux)](./02-client-configuration.md) · [Home](./index.md) · [Next: Advanced SSH Techniques →](./04-advanced-ssh.md)

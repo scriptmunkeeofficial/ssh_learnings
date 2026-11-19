@@ -1,6 +1,6 @@
 # 1. SSH Basics
 
-[← Back to Index](./index.md) | [Next: Client Configuration (macOS & Linux) →](./02-client-configuration.md)
+**Guide 1 of 5** · [← Home](./index.md) · [Next: Client Configuration (macOS & Linux) →](./02-client-configuration.md)
 
 ---
 
@@ -26,10 +26,46 @@ Instead of typing a password every time you connect (which is vulnerable to brut
 | **Private Key** | `~/.ssh/id_ed25519` | Your local machine only | **Only you — never share it** |
 | **Public Key** | `~/.ssh/id_ed25519.pub` | Copied to remote servers (`~/.ssh/authorized_keys`) or Git hosts | Safe to share |
 
-When you connect to a server:
-1. The server checks if your public key is listed in `~/.ssh/authorized_keys`.
-2. The server sends a cryptographic challenge encrypted with your public key.
-3. Your local SSH client proves it owns the matching private key by signing/solving the challenge — without ever sending the private key over the network.
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "fontSize": "12px",
+    "primaryColor": "#F0F4F8",
+    "primaryTextColor": "#1E293B",
+    "primaryBorderColor": "#3B4C68",
+    "lineColor": "#475569",
+    "secondaryColor": "#F8FAFC",
+    "tertiaryColor": "#FFFFFF",
+    "actorBkg": "#F0F4F8",
+    "actorBorder": "#3B4C68",
+    "actorTextColor": "#1E293B",
+    "noteBkgColor": "#FAF6F0",
+    "noteBorderColor": "#D2BFA9",
+    "noteTextColor": "#2D3A4F"
+  }
+}}%%
+sequenceDiagram
+    participant Client as Local SSH Client
+    participant Agent as Local ssh-agent<br/>(Private Key)
+    participant Server as Remote SSH Server<br/>(authorized_keys)
+
+    Client->>Server: 1. Open TCP/22 &amp; negotiate encrypted transport
+    Server-->>Client: 2. Present server host key
+    Note over Client: Verify host key against<br/>~/.ssh/known_hosts
+    Client->>Server: 3. Offer public key (id_ed25519.pub)
+    Note over Server: Match public key in<br/>~/.ssh/authorized_keys
+    Server-->>Client: 4. Send cryptographic challenge
+    Client->>Agent: 5. Request signature for challenge
+    Note over Agent: Private key never leaves<br/>your local machine
+    Agent-->>Client: 6. Return signed challenge
+    Client->>Server: 7. Send signature
+    Server-->>Client: 8. Verify signature &amp; open shell
+```
+
+> [!CAUTION]
+> **Never copy your private key (`id_ed25519`) to remote servers, chat apps, or Git repositories.** Only the `.pub` public key should ever leave your machine.
 
 ---
 
@@ -149,7 +185,8 @@ macOS integrates `ssh-agent` with Apple Keychain so your passphrase persists acr
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 ```
 
-*(Combine this with `UseKeychain yes` and `AddKeysToAgent yes` in `~/.ssh/config` — covered in [Client Configuration](./02-client-configuration.md).)*
+> [!NOTE]
+> Combine this with `UseKeychain yes` and `AddKeysToAgent yes` in `~/.ssh/config` — covered in [Client Configuration](./02-client-configuration.md).
 
 ### Windows
 
@@ -180,4 +217,4 @@ chmod 644 ~/.ssh/id_ed25519.pub ~/.ssh/known_hosts
 
 ---
 
-[← Back to Index](./index.md) | [Next: Client Configuration (macOS & Linux) →](./02-client-configuration.md)
+**Guide 1 of 5** · [← Home](./index.md) · [Next: Client Configuration (macOS & Linux) →](./02-client-configuration.md)
