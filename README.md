@@ -82,15 +82,6 @@ flowchart LR
 
 ---
 
-## Viewing as a Website (GitHub Pages)
-
-This repository includes a custom responsive Jekyll layout ([docs/_layouts/default.html](docs/_layouts/default.html)), Muted Shibui light/dark theme ([docs/assets/css/style.css](docs/assets/css/style.css)), and automatic Mermaid + callout rendering ([docs/assets/js/enhancements.js](docs/assets/js/enhancements.js)):
-
-1. Open your repository on GitHub and go to **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
-3. Select your default branch (`trunk`) and the **`/docs`** folder, then click **Save**.
-4. GitHub will build and publish the site automatically.
-
 ## Running Local Validation Tests
 
 Verify Markdown links, Mermaid diagram standards, theme invariants, and client-side enhancements using Node's built-in test runner (Node 20+):
