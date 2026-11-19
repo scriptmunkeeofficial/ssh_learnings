@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | escape }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-brand" href="{{ '/' | relative_url }}">
+        <span class="brand-mark" aria-hidden="true">$_</span>
+        <span class="brand-text">{{ site.title }}</span>
+      </a>
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-expanded="false"
+        aria-controls="site-sidebar"
+      >
+        Menu
+      </button>
+    </div>
+  </header>
+
+  <div class="site-shell">
+    <aside id="site-sidebar" class="site-sidebar" aria-label="Guide navigation">
+      <div class="sidebar-intro">
+        <p class="sidebar-eyebrow">Cross-Platform SSH Field Guide</p>
+        <p class="sidebar-summary">{{ site.description }}</p>
+      </div>
+      <nav>
+        <ul class="nav-list">
+          {% for item in site.navigation %}
+            {% assign item_href = item.url | relative_url %}
+            {% assign is_current = false %}
+            {% if page.url == item.url %}
+              {% assign is_current = true %}
+            {% elsif item.url == '/' and page.url == '/index.html' %}
+              {% assign is_current = true %}
+            {% endif %}
+            <li>
+              <a
+                href="{{ item_href }}"
+                {% if is_current %}aria-current="page"{% endif %}
+              >
+                <span class="nav-title">{{ item.title }}</span>
+                <span class="nav-badge">{{ item.badge }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main-content" class="site-main">
+      <article class="doc-content">
+        {{ content }}
+      </article>
+      <footer class="site-footer">
+        <p>{{ site.title }} · Rendered with GitHub Pages &amp; Mermaid</p>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="{{ '/assets/js/enhancements.js' | relative_url }}"></script>
+</body>
+</html>
