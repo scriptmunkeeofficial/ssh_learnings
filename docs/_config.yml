@@ -1,3 +1,33 @@
-theme: jekyll-theme-midnight
 title: SSH Learnings
-description: A comprehensive, cross-platform guide to SSH — from beginner fundamentals to advanced tunneling, jump hosts, and automation.
+description: A comprehensive, cross-platform guide to SSH — from beginner fundamentals to advanced tunneling, jump hosts, and Windows tooling.
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+navigation:
+  - title: Overview
+    url: /
+    badge: Home
+  - title: 1. SSH Basics
+    url: /01-ssh-basics.html
+    badge: Novice
+  - title: 2. Client Configuration
+    url: /02-client-configuration.html
+    badge: Config
+  - title: 3. Windows SSH Clients
+    url: /03-windows-clients.html
+    badge: Windows
+  - title: 4. Advanced SSH
+    url: /04-advanced-ssh.html
+    badge: Advanced
+  - title: 5. Troubleshooting & Cheat Sheet
+    url: /05-troubleshooting-and-cheatsheet.html
+    badge: Reference
